@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Shamie's 40th</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Kalam:wght@400;700&display=swap">
+<style>
+/* Layout: a bedside patient monitor is the card's cover. A defibrillator button sets off the party, and the handwritten message sits below it. */
+:root {
+  --night: #22102f;
+  --night-2: #3a1a4d;
+  --casing: #ece6f1;
+  --casing-dark: #b9aec6;
+  --screen: #0a1026;
+  --ecg: #7dffa8;
+  --cyan: #4fe3ee;
+  --gold: #ffc94a;
+  --pink: #ff4f8b;
+  --paper: #fff0f4;
+  --ink: #2c1439;
+  --rule: #f3c6d6;
+  --display: "Big Shoulders Display", Impact, "Arial Narrow", sans-serif;
+  --hand: "Kalam", "Segoe Print", "Comic Sans MS", cursive;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: radial-gradient(120% 70% at 50% 0%, var(--night-2), var(--night) 70%) var(--night);
+  background-attachment: fixed;
+  color: var(--casing);
+  font-family: var(--display);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+  overflow-x: hidden;
+}
+.wrap { max-width: 860px; margin-inline: auto; display: grid; gap: 28px; min-width: 0; }
+header { text-align: center; display: grid; gap: 2px; }
+header p { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); }
+h1 {
+  margin: 0;
+  font-size: clamp(3rem, 13vw, 6.2rem);
+  line-height: .95;
+  font-weight: 900;
+  color: var(--gold);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* The monitor */
+.monitor {
+  background: linear-gradient(170deg, var(--casing), var(--casing-dark));
+  border-radius: 22px;
+  padding: 14px 14px 16px;
+  display: grid;
+  gap: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+  min-width: 0;
+}
+.monitor.jolt { animation: jolt .55s linear; }
+@keyframes jolt {
+  0%, 100% { transform: none; }
+  15% { transform: translate(-12px, 7px) rotate(-1.2deg); }
+  35% { transform: translate(10px, -8px) rotate(1deg); }
+  55% { transform: translate(-7px, 4px) rotate(-.6deg); }
+  75% { transform: translate(4px, -2px); }
+}
+.screen { background: var(--screen); border-radius: 10px; overflow: hidden; display: grid; min-width: 0; }
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--casing);
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+.alarm {
+  background: var(--pink);
+  color: var(--screen);
+  padding: 1px 10px;
+  border-radius: 4px;
+  animation: blink 1s steps(2, jump-none) infinite;
+}
+.party .alarm { background: var(--gold); animation: none; }
+@keyframes blink { from { opacity: 1; } to { opacity: .5; } }
+.readout { display: grid; grid-template-columns: minmax(0, 1fr) 148px; min-width: 0; }
+#traces { display: block; width: 100%; height: 280px; }
+.vitals { display: grid; border-left: 1px solid rgba(255, 255, 255, .14); }
+.vital { padding: 6px 12px; display: grid; align-content: center; color: var(--c); border-bottom: 1px solid rgba(255, 255, 255, .08); min-width: 0; }
+.vital:last-child { border-bottom: 0; }
+.vital span { font-size: .85rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.vital b { font-size: 2.7rem; line-height: 1; font-weight: 900; font-variant-numeric: tabular-nums; }
+.vital b small { font-size: .95rem; font-weight: 700; letter-spacing: .04em; margin-left: 3px; }
+
+/* The defibrillator controls */
+.controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-inline: 4px; }
+.joules { flex: 1 1 220px; display: grid; gap: 4px; color: var(--ink); min-width: 0; }
+.joules label, #status { font-size: 1.05rem; font-weight: 700; letter-spacing: .04em; }
+.meter { height: 12px; border-radius: 6px; background: rgba(44, 20, 57, .22); overflow: hidden; }
+#charge { height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--pink)); }
+.btn {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 28px;
+  min-width: 170px;
+  cursor: pointer;
+  background: var(--ink);
+  color: var(--gold);
+}
+.btn:disabled { opacity: .55; cursor: progress; }
+.btn.armed { background: var(--pink); color: var(--screen); animation: throb .6s ease-in-out infinite alternate; }
+@keyframes throb { to { transform: scale(1.06); box-shadow: 0 0 34px var(--pink); } }
+.quiet {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  background: none;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+/* The message */
+.letter {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: clamp(22px, 5vw, 44px);
+  display: grid;
+  gap: 16px;
+  font-family: var(--hand);
+  font-size: 1.28rem;
+  line-height: 1.55;
+  transform: rotate(-.5deg);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .4);
+  scroll-margin-top: 24px;
+  min-width: 0;
+}
+.letter h2 { margin: 0; font-family: var(--display); font-size: clamp(2.4rem, 8vw, 3.6rem); line-height: 1; font-weight: 900; text-transform: uppercase; color: var(--pink); text-wrap: balance; }
+.letter p { margin: 0; max-width: 62ch; }
+.rx { min-width: 0; overflow-x: auto; }
+.rx table { width: 100%; border-collapse: collapse; font-size: 1.12rem; line-height: 1.3; }
+.rx caption { text-align: left; font-family: var(--display); font-weight: 900; font-size: 1.35rem; letter-spacing: .04em; text-transform: uppercase; padding-bottom: 6px; }
+.rx th { font-family: var(--display); font-size: 1rem; letter-spacing: .08em; text-transform: uppercase; text-align: left; }
+.rx th, .rx td { padding: 7px 10px 7px 0; border-bottom: 2px solid var(--rule); vertical-align: top; }
+.sign { font-weight: 700; font-size: 1.5rem; }
+
+/* Full-screen show */
+#scrim { position: fixed; inset: 0; background: var(--night); opacity: 0; transition: opacity .5s; pointer-events: none; z-index: 20; }
+#scrim.on { opacity: .9; }
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 21; }
+#flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 22; }
+#flash.go { animation: flash .6s ease-out; }
+@keyframes flash { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+@media (max-width: 600px) {
+  .readout { grid-template-columns: minmax(0, 1fr); }
+  #traces { height: 190px; }
+  .vitals { grid-template-columns: repeat(4, minmax(0, 1fr)); border-left: 0; border-top: 1px solid rgba(255, 255, 255, .14); }
+  .vital { padding: 6px 8px; border-bottom: 0; border-right: 1px solid rgba(255, 255, 255, .08); }
+  .vital:last-child { border-right: 0; }
+  .vital b { font-size: 1.9rem; }
+  .vital b small { font-size: .75rem; margin-left: 1px; }
+  .vital span { font-size: .72rem; }
+  .btn { flex: 1 1 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .alarm, .btn.armed, .monitor.jolt, #flash.go { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p>Room 40's call bell is ringing</p>
+    <h1>Happy 40th, Shamie</h1>
+  </header>
+
+  <section class="monitor" id="monitor" aria-label="Birthday patient monitor">
+    <div class="screen">
+      <div class="topbar">
+        <span>Shamie &middot; Room 40 &middot; 02 Nov 2026</span>
+        <span class="alarm" id="alarm">Code Birthday</span>
+      </div>
+      <div class="readout">
+        <canvas id="traces" role="img" aria-label="Heart trace running across the monitor"></canvas>
+        <div class="vitals">
+          <div class="vital" style="--c: var(--ecg)"><span>HR</span><b id="v-hr">72</b></div>
+          <div class="vital" style="--c: var(--cyan)"><span>Joy</span><b><i id="v-joy" style="font-style:normal">96</i><small>%</small></b></div>
+          <div class="vital" style="--c: var(--gold)"><span>Age</span><b id="v-age">39</b></div>
+          <div class="vital" style="--c: var(--pink)"><span>Temp</span><b id="v-temp">36.8</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="joules">
+        <label for="charge-meter" id="status" aria-live="polite">Turn your sound up. Press Charge, then press Shock.</label>
+        <div class="meter" id="charge-meter"><div id="charge"></div></div>
+      </div>
+      <button class="quiet" id="sound" type="button" aria-pressed="true">Sound on</button>
+      <button class="btn" id="defib" type="button">Charge</button>
+    </div>
+  </section>
+
+  <article class="letter" id="letter">
+    <h2>Dear Shamie</h2>
+    <p>Forty years, and so many of them spent looking after other people. You stay calm when every call bell rings at once, you hold hands at 3am, and you give your residents comfort, dignity and a reason to smile. You turn a care home into a home. Not everyone can do that. You make it look easy.</p>
+    <p>Today the care plan is all about you. Your orders are written below, and they are not optional.</p>
+    <div class="rx">
+      <table>
+        <caption>Birthday prescription</caption>
+        <thead><tr><th scope="col">Medicine</th><th scope="col">Dose</th><th scope="col">How often</th></tr></thead>
+        <tbody>
+          <tr><td>Cake</td><td>1 big slice</td><td>Repeat as required</td></tr>
+          <tr><td>Hot tea</td><td>1 full cup, finished while hot</td><td>Twice daily</td></tr>
+          <tr><td>Laughter</td><td>Until your sides hurt</td><td>All day</td></tr>
+          <tr><td>Feet up</td><td>Both feet</td><td>Until the next shift</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Forty looks brilliant on you, and the best is still to come. May this year bring you good health, big laughs and plenty of days off.</p>
+    <p class="sign">With love and huge respect,<br>Mbalisi</p>
+  </article>
+</div>
+
+<div id="scrim"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="flash"></div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var css = getComputedStyle(document.documentElement);
+  var color = function (n) { return css.getPropertyValue(n).trim(); };
+  var COL = { ecg: color("--ecg"), cyan: color("--cyan"), gold: color("--gold"), pink: color("--pink"), white: "#ffffff" };
+  var PALETTE = [COL.gold, COL.pink, COL.cyan, COL.ecg, COL.white];
+
+  /* ---------- Sound ---------- */
+  var ac = null, soundOn = true;
+  function audio() {
+    if (!ac) {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (C) { try { ac = new C(); } catch (e) { ac = null; } }
+    }
+    if (ac && ac.state === "suspended") ac.resume();
+    return ac;
+  }
+  function tone(freq, dur, type, vol, slideTo) {
+    if (!soundOn || !ac) return;
+    var t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+    o.type = type || "sine";
+    o.frequency.setValueAtTime(freq, t);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+    g.gain.setValueAtTime(vol || .15, t);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g).connect(ac.destination);
+    o.start(t);
+    o.stop(t + dur + .02);
+  }
+
+  /* ---------- Monitor traces ---------- */
+  var tc = $("traces"), tx = tc.getContext("2d");
+  var W = 0, H = 0, dpr = 1, cursor = 0, secPerPx = 1 / 120;
+  var ecgBuf, plethBuf, respBuf;
+  var heart = { hr: 72, phase: .3, amp: 1, manual: false, time: 0 };
+
+  function ecgAt(p) {
+    function g(c, w, a) { var d = (p - c) / w; return a * Math.exp(-d * d); }
+    return g(.18, .03, .12) + g(.27, .008, -.14) + g(.3, .009, 1) + g(.33, .01, -.26) + g(.52, .05, .24);
+  }
+  function plethAt(p) {
+    var q = (p + .75) % 1;
+    return Math.pow(Math.sin(Math.PI * Math.min(1, q * 1.7)), 2) * .9 + .22 * Math.exp(-Math.pow((q - .68) / .07, 2));
+  }
+  function step(x) {
+    var dt = secPerPx;
+    heart.time += dt;
+    heart.phase += dt * heart.hr / 60;
+    if (heart.phase >= 1) { heart.phase = heart.manual ? 1 : heart.phase - 1; }
+    ecgBuf[x] = ecgAt(heart.phase) * heart.amp;
+    plethBuf[x] = plethAt(Math.min(heart.phase, .999)) * (heart.manual && heart.phase >= 1 ? .1 : 1);
+    respBuf[x] = Math.sin(heart.time * 2 * Math.PI / 4) * .5 + .5;
+  }
+  function sizeTraces() {
+    var r = tc.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(50, Math.round(r.width)); H = Math.max(50, Math.round(r.height));
+    tc.width = W * dpr; tc.height = H * dpr;
+    ecgBuf = new Float32Array(W); plethBuf = new Float32Array(W); respBuf = new Float32Array(W);
+    for (var i = 0; i < W; i++) step(i);
+    cursor = 0;
+    drawTraces();
+  }
+  function line(buf, top, h, scale, col, label) {
+    tx.fillStyle = col;
+    tx.font = '700 12px ' + color("--display");
+    tx.fillText(label, 8, top + 15);
+    tx.strokeStyle = col;
+    tx.lineWidth = 2;
+    tx.lineJoin = "round";
+    tx.shadowColor = col;
+    tx.shadowBlur = 7;
+    var gap = 22, base = top + h * .78;
+    tx.beginPath();
+    var pen = false;
+    for (var x = 0; x < W; x++) {
+      var d = (x - cursor + W) % W;
+      if (d < gap) { pen = false; continue; }
+      var y = base - buf[x] * h * scale;
+      if (pen) tx.lineTo(x, y); else { tx.moveTo(x, y); pen = true; }
+    }
+    tx.stroke();
+    tx.shadowBlur = 0;
+  }
+  function drawTraces() {
+    tx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    tx.clearRect(0, 0, W, H);
+    line(ecgBuf, 0, H * .5, .72, COL.ecg, "ECG II");
+    line(plethBuf, H * .5, H * .27, .62, COL.cyan, "PLETH");
+    line(respBuf, H * .75, H * .25, .55, COL.gold, "RESP");
+  }
+
+  /* ---------- Fireworks and particle lettering ---------- */
+  var fc = $("fx"), fx = fc.getContext("2d");
+  var FW = 0, FH = 0, fdpr = 1, sparks = [], rockets = [], confetti = [], letters = [];
+  var lettersHeld = false, showing = false, fxAwake = false, dot = 2.6;
+
+  function sizeFx() {
+    fdpr = Math.min(window.devicePixelRatio || 1, 2);
+    FW = window.innerWidth; FH = window.innerHeight;
+    fc.width = FW * fdpr; fc.height = FH * fdpr;
+  }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function burst(x, y, heartShape) {
+    var c1 = pick(PALETTE), c2 = pick(PALETTE), n = heartShape ? 90 : 120, s = Math.min(FW, FH) / 300 + 1.2;
+    for (var i = 0; i < n; i++) {
+      var a = i / n * Math.PI * 2, vx, vy;
+      if (heartShape) {
+        vx = 16 * Math.pow(Math.sin(a), 3) / 16;
+        vy = -(13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a)) / 16;
+        vx *= s * 2; vy *= s * 2;
+      } else {
+        var sp = s * (.5 + Math.random() * 1.6);
+        vx = Math.cos(a) * sp; vy = Math.sin(a) * sp;
+      }
+      sparks.push({ x: x, y: y, vx: vx, vy: vy, life: 1, fade: .012 + Math.random() * .012, c: i % 2 ? c1 : c2, s: 1.4 + Math.random() * 1.5 });
+    }
+    wake();
+  }
+  function launch(x, heartShape) {
+    rockets.push({ x: x, y: FH + 6, vx: (Math.random() - .5) * 1.2, vy: -(FH / 62) - Math.random() * 3, top: FH * (.12 + Math.random() * .4), h: !!heartShape });
+    wake();
+  }
+  function rain(n) {
+    for (var i = 0; i < n; i++) {
+      confetti.push({ x: Math.random() * FW, y: -20 - Math.random() * FH * .8, vy: 1.6 + Math.random() * 2.4, sway: Math.random() * 6, spin: Math.random() * 6, c: pick(PALETTE), plus: Math.random() < .4, s: 5 + Math.random() * 5 });
+    }
+    wake();
+  }
+  function sampleText() {
+    var off = document.createElement("canvas"); off.width = FW; off.height = FH;
+    var o = off.getContext("2d", { willReadFrequently: true });
+    var family = color("--display");
+    o.font = "900 200px " + family;
+    var size = Math.min(200 * (FW * .88) / o.measureText("SHAMIE").width, FH * .36);
+    var small = size * .36, total = size * .86 + small * .95;
+    var y1 = (FH - total) / 2 + small * .8, y2 = y1 + size * .9;
+    o.textAlign = "center";
+    o.fillStyle = "#fff";
+    o.font = "900 " + small + "px " + family;
+    o.fillText("HAPPY 40TH", FW / 2, y1);
+    o.font = "900 " + size + "px " + family;
+    o.fillText("SHAMIE", FW / 2, y2);
+    var d = o.getImageData(0, 0, FW, FH).data, pts = [], x, y;
+    for (y = 0; y < FH; y += 2) for (x = 0; x < FW; x += 2) if (d[(y * FW + x) * 4 + 3] > 128) pts.push([x, y]);
+    var keep = Math.min(1, 4200 / pts.length), split = y1 + small * .3;
+    dot = Math.max(2.6, 1.8 * Math.sqrt(1 / keep));
+    letters = [];
+    pts.forEach(function (p) {
+      if (Math.random() > keep) return;
+      var c = p[1] < split ? COL.cyan : (Math.random() < .72 ? COL.gold : COL.pink);
+      var a = Math.random() * Math.PI * 2, r = Math.random() * Math.max(FW, FH) * .55;
+      letters.push({ x: FW / 2 + Math.cos(a) * r, y: FH / 2 + Math.sin(a) * r, tx: p[0], ty: p[1], vx: 0, vy: 0, c: c, k: .05 + Math.random() * .05, tw: Math.random() * 6, life: 1 });
+    });
+    lettersHeld = true;
+    wake();
+  }
+  function drawFx() {
+    fx.setTransform(fdpr, 0, 0, fdpr, 0, 0);
+    fx.globalCompositeOperation = "destination-out";
+    fx.fillStyle = "rgba(0,0,0,.28)";
+    fx.fillRect(0, 0, FW, FH);
+    fx.globalCompositeOperation = "lighter";
+    var i, p;
+    for (i = rockets.length - 1; i >= 0; i--) {
+      p = rockets[i];
+      p.x += p.vx; p.y += p.vy; p.vy *= .992;
+      fx.fillStyle = COL.gold;
+      fx.fillRect(p.x - 1.5, p.y, 3, 7);
+      if (p.y <= p.top) { burst(p.x, p.y, p.h); tone(70 + Math.random() * 40, .3, "triangle", .1); rockets.splice(i, 1); }
+    }
+    for (i = sparks.length - 1; i >= 0; i--) {
+      p = sparks[i];
+      p.vx *= .975; p.vy = p.vy * .975 + .035; p.x += p.vx; p.y += p.vy; p.life -= p.fade;
+      if (p.life <= 0) { sparks.splice(i, 1); continue; }
+      fx.globalAlpha = p.life; fx.fillStyle = p.c;
+      fx.fillRect(p.x, p.y, p.s, p.s);
+    }
+    fx.globalAlpha = 1;
+    fx.globalCompositeOperation = "source-over";
+    var t = performance.now() / 180;
+    for (i = letters.length - 1; i >= 0; i--) {
+      p = letters[i];
+      if (lettersHeld) {
+        p.x += (p.tx - p.x) * p.k; p.y += (p.ty - p.y) * p.k;
+      } else {
+        p.vy += .09; p.x += p.vx; p.y += p.vy; p.life -= .012;
+        if (p.life <= 0) { letters.splice(i, 1); continue; }
+      }
+      fx.globalAlpha = p.life * (.8 + .2 * Math.sin(t + p.tw));
+      fx.fillStyle = p.c;
+      fx.fillRect(p.x, p.y, dot, dot);
+    }
+    fx.globalAlpha = 1;
+    for (i = confetti.length - 1; i >= 0; i--) {
+      p = confetti[i];
+      p.y += p.vy; p.spin += .07;
+      if (p.y > FH + 20) { confetti.splice(i, 1); continue; }
+      var cx = p.x + Math.sin(p.spin + p.sway) * 16;
+      fx.fillStyle = p.c;
+      if (p.plus) {
+        fx.fillRect(cx - p.s, p.y - p.s / 3, p.s * 2, p.s * .66);
+        fx.fillRect(cx - p.s / 3, p.y - p.s, p.s * .66, p.s * 2);
+      } else {
+        fx.fillRect(cx, p.y, p.s * 1.5 * Math.abs(Math.cos(p.spin)) + 1, p.s);
+      }
+    }
+  }
+  function wake() { fxAwake = true; }
+
+  /* ---------- Main loop ---------- */
+  var last = 0, carry = 0;
+  function frame(now) {
+    var dt = Math.min(.05, (now - last) / 1000 || 0);
+    last = now;
+    carry += dt / secPerPx;
+    var n = Math.floor(carry);
+    carry -= n;
+    for (var i = 0; i < n; i++) { step(cursor); cursor = (cursor + 1) % W; }
+    drawTraces();
+    if (fxAwake) {
+      drawFx();
+      if (!sparks.length && !rockets.length && !confetti.length && !letters.length && !showing) {
+        fxAwake = false;
+        fx.setTransform(1, 0, 0, 1, 0, 0);
+        fx.clearRect(0, 0, fc.width, fc.height);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- Defibrillator sequence ---------- */
+  var btn = $("defib"), status = $("status"), state = "idle", timers = [];
+  function later(ms, fn) { timers.push(setTimeout(fn, ms)); }
+  function setVitals(hr, joy, age, temp) {
+    $("v-hr").textContent = hr; $("v-joy").textContent = joy; $("v-age").textContent = age; $("v-temp").textContent = temp;
+  }
+  function charge() {
+    audio();
+    state = "charging";
+    btn.disabled = true;
+    btn.textContent = "Charging";
+    status.textContent = "Charging to 40 J";
+    tone(180, 1.7, "sawtooth", .06, 1500);
+    var start = performance.now(), dur = reduced ? 200 : 1700;
+    (function fill() {
+      var p = Math.min(1, (performance.now() - start) / dur);
+      $("charge").style.width = (p * 100) + "%";
+      if (p < 1) { requestAnimationFrame(fill); return; }
+      state = "ready";
+      btn.disabled = false;
+      btn.textContent = "Press Shock!";
+      btn.classList.add("armed");
+      status.textContent = "Charged! Now press Shock.";
+      tone(1320, .12, "square", .08);
+      later(160, function () { tone(1320, .12, "square", .08); });
+    })();
+  }
+  /* Happy Birthday: [frequency, length in beats] */
+  var G4 = 392, A4 = 440, B4 = 494, C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784;
+  var TUNE = [[G4,.75],[G4,.25],[A4,1],[G4,1],[C5,1],[B4,2],[G4,.75],[G4,.25],[A4,1],[G4,1],[D5,1],[C5,2],[G4,.75],[G4,.25],[G5,1],[E5,1],[C5,1],[B4,1],[A4,2],[F5,.75],[F5,.25],[E5,1],[C5,1],[D5,1],[C5,3]];
+  function playTune(startMs) {
+    var beat = 420, at = startMs;
+    heart.manual = true;
+    TUNE.forEach(function (n) {
+      later(at, function () {
+        tone(n[0], .36 * Math.max(1, n[1]), "square", .05);
+        heart.amp = .75 + (n[0] - 392) / 500;
+        heart.phase = .12;
+        heart.hr = 200;
+      });
+      at += n[1] * beat;
+    });
+    return at;
+  }
+  function shock() {
+    audio();
+    state = "show";
+    showing = true;
+    btn.classList.remove("armed");
+    btn.disabled = true;
+    btn.textContent = "Clear!";
+    status.textContent = "Shock delivered. Room 40 is responding.";
+    $("charge").style.width = "0";
+    document.body.classList.add("party");
+    setVitals(140, 100, 40, "40.0");
+    $("alarm").textContent = "Party rhythm detected";
+    tone(60, .7, "sine", .5, 28);
+    tone(900, .2, "sawtooth", .12, 80);
+
+    if (reduced) {
+      playTune(0);
+      finish();
+      return;
+    }
+    var m = $("monitor");
+    m.classList.remove("jolt"); void m.offsetWidth; m.classList.add("jolt");
+    var f = $("flash");
+    f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
+    $("scrim").classList.add("on");
+    var r = m.getBoundingClientRect();
+    burst(r.left + r.width / 2, Math.max(60, r.top + r.height * .35), false);
+    burst(FW * .25, FH * .3, false);
+    burst(FW * .75, FH * .3, false);
+
+    later(450, sampleText);
+    var end = playTune(700);
+    var volley = setInterval(function () { launch(FW * (.08 + Math.random() * .84), Math.random() < .35); }, 620);
+    timers.push(volley);
+    later(1800, function () { rain(90); });
+    later(end - 1200, function () {
+      clearInterval(volley);
+      lettersHeld = false;
+      letters.forEach(function (p) { p.vx = (Math.random() - .5) * 4; p.vy = -Math.random() * 4; });
+      [.2, .5, .8].forEach(function (x, i) { later(i * 180, function () { burst(FW * x, FH * .3, i === 1); }); });
+      rain(160);
+    });
+    later(end + 200, finish);
+  }
+  function finish() {
+    showing = false;
+    state = "done";
+    heart.manual = false; heart.hr = 96; heart.amp = 1;
+    setVitals(96, 100, 40, "40.0");
+    $("scrim").classList.remove("on");
+    btn.disabled = false;
+    btn.textContent = "Go again";
+    status.textContent = "Stable and fabulous at 40. Tap anywhere for fireworks.";
+    $("letter").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    if (!reduced) later(3500, autoRead);
+  }
+  /* After the show, the message drifts up slowly so she can read it hands-free. Any touch, scroll or key press gives control back. */
+  var reading = false;
+  function stopReading() { reading = false; }
+  function autoRead() {
+    var y = window.scrollY, prev = performance.now();
+    reading = true;
+    (function drift(now) {
+      if (!reading) return;
+      y += Math.min(.05, (now - prev) / 1000) * 24;
+      prev = now;
+      window.scrollTo(0, Math.round(y));
+      if (y + window.innerHeight >= document.documentElement.scrollHeight - 2) { reading = false; return; }
+      requestAnimationFrame(drift);
+    })(prev);
+  }
+  ["wheel", "touchstart", "pointerdown", "keydown"].forEach(function (ev) {
+    window.addEventListener(ev, stopReading, { passive: true });
+  });
+  function reset() {
+    stopReading();
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    timers.forEach(clearTimeout); timers = [];
+    state = "idle";
+    charge();
+  }
+  btn.addEventListener("click", function () {
+    if (state === "idle") charge();
+    else if (state === "ready") shock();
+    else if (state === "done") reset();
+  });
+  $("sound").addEventListener("click", function () {
+    soundOn = !soundOn;
+    this.textContent = soundOn ? "Sound on" : "Sound off";
+    this.setAttribute("aria-pressed", soundOn ? "true" : "false");
+  });
+  window.addEventListener("pointerdown", function (e) {
+    if (state !== "done" || reduced || e.target.closest("button")) return;
+    audio();
+    burst(e.clientX, e.clientY, Math.random() < .4);
+    tone(90, .3, "triangle", .12);
+  });
+
+  /* ---------- Start ---------- */
+  sizeTraces();
+  sizeFx();
+  var resizeTimer;
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () { sizeTraces(); sizeFx(); }, 120);
+  });
+  if (document.fonts && document.fonts.load) { try { document.fonts.load('900 100px "Big Shoulders Display"'); } catch (e) {} }
+  if (reduced) { drawTraces(); } else { requestAnimationFrame(frame); }
+})();
+</script>
+</body>
+</html>
